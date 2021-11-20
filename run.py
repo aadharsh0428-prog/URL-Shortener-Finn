@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify # Imports the flask library modules
 from flask.wrappers import Response
 from marshmallow import ValidationError
+import requests as req
 import encode
 import decode
 import json
@@ -16,6 +17,18 @@ def encode_data():
     except ValidationError as error_message:
         return jsonify(error_message.messages),400
     try:
+        resp = req.get(url)
+    except:
+        return jsonify("Could not resolve host"),400
+    try:
+        code = resp.status_code
+        if((code>=200 and code<209) or (code==226)):
+           print("Website is alive")
+        else:
+            return jsonify("Website is inactive"),400
+    except:
+        return jsonify("Error while checking if website's status"),400
+    try:
         short_url=encode.url_short(url)
     except(Exception,):
         return Response(status=errors_find['ServerError'].get('status'), response=errors_find['ServerError'].get('response'))
@@ -28,6 +41,18 @@ def decode_data():
         value=validate.check(url_new)
     except ValidationError as error_message:
         return jsonify(error_message.messages),400
+    try:
+        resp = req.get(url_new)
+    except:
+        return jsonify("Could not resolve host"),400
+    try:
+        code = resp.status_code
+        if((code>=200 and code<209) or (code==226)):
+           print("Website is alive")
+        else:
+            return jsonify("Website is dead"),400
+    except:
+        return jsonify("Error while checking if website's status"),400
     try:
         long_url=decode.url_long(url_new)
     except(Exception,):
