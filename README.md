@@ -60,7 +60,7 @@ After installing the required libraries to execute this code we shall now set up
 Note this is running it on the localhost.<br>
 
 ```
-$> export FLASk_APP=run.py
+$> export FLASK_APP=run.py
 $> export FLASK_ENV=development
 $> flask run
 ```
