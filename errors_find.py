@@ -8,3 +8,5 @@ errors_find = {
         'status': 400
     },
 }
+
+#Code to store error types based on status code.
